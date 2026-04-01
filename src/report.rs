@@ -41,3 +41,18 @@ impl fmt::Display for ImageReport {
         Ok(())
     }
 }
+impl ImageReport {
+    // New method to print only high-level metadata
+    pub fn display_metadata_only(&self) {
+        println!("Format: {}", self.format);
+        if let (Some(w), Some(h)) = (self.width, self.height) {
+            println!("Dimensions: {} x {}", w, h);
+        }
+        if !self.metadata.is_empty() {
+            println!("\nMetadata:");
+            for m in &self.metadata {
+                println!("  {}: {}", m.key, m.value);
+            }
+        }
+    }
+}

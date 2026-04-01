@@ -14,22 +14,17 @@ fn main() {
     let args = Args::parse();
 
     match args.command {
-        Command::Inspect { path } | Command::Metadata { path } => {
-            let data = match fs::read(&path) {
-                Ok(d) => d,
-                Err(e) => {
-                    eprintln!("error: {}", e);
-                    std::process::exit(1);
-                }
-            };
-
-            match format::inspect(&data) {
-                Ok(report) => println!("{}", report),
-                Err(e) => {
-                    eprintln!("error: {}", e);
-                    std::process::exit(1);
-                }
-            }
-        }
+    Command::Inspect { path } => {
+        let data = fs::read(&path).expect("Failed to read file");
+        let report = format::inspect(&data).expect("Inspection failed");
+        // Use the default Display implementation (shows everything)
+        println!("{}", report); 
     }
+    Command::Metadata { path } => {
+        let data = fs::read(&path).expect("Failed to read file");
+        let report = format::inspect(&data).expect("Inspection failed");
+        // Use our new specific method (hides binary hex info)
+        report.display_metadata_only(); 
+    }
+}
 }
